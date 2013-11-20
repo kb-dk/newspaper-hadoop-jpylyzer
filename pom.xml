@@ -29,6 +29,22 @@
             <classifier>hadoop2</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.sbutil</groupId>
+            <artifactId>sbutil</artifactId>
+            <version>0.5.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <artifactId>centralWebservice-lib</artifactId>
+            <version>0.0.28-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
