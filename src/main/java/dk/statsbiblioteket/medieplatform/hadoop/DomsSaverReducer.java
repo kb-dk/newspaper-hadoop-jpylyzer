@@ -25,7 +25,7 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> {
         String pid = getDomsPid(key);
         for (Text value : values) {
             try {
-                fedora.modifyDatastreamByValue(pid,"JPYLYZER",value.toString(),null,"added Jpylyzer from Hadoop");
+                fedora.modifyDatastreamByValue(pid,"JPYLYZER",value.toString(),null,"added Jpylyzer output from Hadoop");
                 context.write(key,new Text(pid));
             } catch (BackendInvalidCredsException | BackendMethodFailedException | BackendInvalidResourceException e) {
                 throw new IOException(e);
@@ -35,7 +35,7 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> {
 
     private String getDomsPid(Text key) throws IOException {
         try {
-            List<String> hits = fedora.findObjectFromDCIdentifier("path: "+translate(key.toString()));
+            List<String> hits = fedora.findObjectFromDCIdentifier("path:"+translate(key.toString()));
             if (hits.isEmpty()){
                 return null;
             } else {
