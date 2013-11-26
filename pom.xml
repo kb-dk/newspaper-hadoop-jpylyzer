@@ -31,13 +31,13 @@
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.sbutil</groupId>
-            <artifactId>sbutil</artifactId>
-            <version>0.5.9-SNAPSHOT</version>
+            <artifactId>sbutil-common</artifactId>
+            <version>0.5.13</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>centralWebservice-lib</artifactId>
-            <version>0.0.28-SNAPSHOT</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
