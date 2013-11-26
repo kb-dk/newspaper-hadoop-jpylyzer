@@ -13,6 +13,8 @@ import java.util.Dictionary;
 
 public class JpylyzerJob {
 
+
+    //TODO use for something
     public void runJob(String inputFiles, String outputFolder) throws
                                                                IOException,
                                                                ClassNotFoundException,

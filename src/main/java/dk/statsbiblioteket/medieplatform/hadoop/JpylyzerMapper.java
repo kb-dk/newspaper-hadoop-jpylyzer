@@ -18,7 +18,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> {
     private String jpylyzerPath;
 
     public JpylyzerMapper(String jpylyzerPath) {
-        //To change body of created methods use File | Settings | File Templates.
+        //TODO this constructur is illegal, must be empty
         this.jpylyzerPath = jpylyzerPath;
     }
 

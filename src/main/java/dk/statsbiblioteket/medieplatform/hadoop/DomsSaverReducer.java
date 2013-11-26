@@ -16,6 +16,7 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> {
     EnhancedFedora fedora;
 
     public DomsSaverReducer(EnhancedFedora fedora) {
+        //TODO this constructure is illegal, must be empty
         this.fedora = fedora;
     }
 
