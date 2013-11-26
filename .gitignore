@@ -1,0 +1,6 @@
+*.pyc
+*.iml
+*.ipr
+*.iws
+.idea/
+target/
