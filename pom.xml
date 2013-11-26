@@ -5,78 +5,59 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>hadooptest</artifactId>
+    <artifactId>newspaper-hadoop-jpylyzer</artifactId>
     <groupId>dk.statsbiblioteket.scape.test</groupId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <repositories>
         <repository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
     </repositories>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.mrunit</groupId>
-            <artifactId>mrunit</artifactId>
-            <version>1.0.0</version>
-            <classifier>hadoop2</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.sbutil</groupId>
-            <artifactId>sbutil-common</artifactId>
-            <version>0.5.13</version>
-        </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
-            <artifactId>centralWebservice-lib</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>newspaper-hadoop-jpylyzer-job</module>
+        <module>newspaper-hadoop-jpylyzer-component</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+                <version>2.2.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.sbutil</groupId>
+                <artifactId>sbutil-common</artifactId>
+                <version>0.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>centralWebservice-lib</artifactId>
+                <version>1.0.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.mrunit</groupId>
+                <artifactId>mrunit</artifactId>
+                <version>1.0.0</version>
+                <classifier>hadoop2</classifier>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <!--
-                                        <archive>
-                                            <manifest>
-                                                <addClasspath>true</addClasspath>
-                                                <mainClass>org.myorg.WordCount</mainClass>
-                                            </manifest>
-                                        </archive>
-                    -->
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -87,7 +68,6 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 

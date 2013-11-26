@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.*;
  
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.*;
- 
+
 public class WordCount {
  
   public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
