@@ -1,6 +1,9 @@
 package dk.statsbiblioteket.medieplatform.hadoop;
 
 import dk.statsbiblioteket.util.console.ProcessRunner;
+
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -12,21 +15,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> {
+public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> implements Configurable {
 
+    private Configuration configuration;
 
-    private String jpylyzerPath;
-
-    public JpylyzerMapper(String jpylyzerPath) {
-        //TODO this constructur is illegal, must be empty
-        this.jpylyzerPath = jpylyzerPath;
-    }
-
-    @Override
+	@Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         context.write(value, asText(jpylize(new Path(value.toString()))));
     }
-
 
     private Text asText(InputStream inputStream) throws IOException {
         StringBuilder builder = new StringBuilder();
@@ -38,6 +34,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> {
         reader.close();
         return new Text(builder.toString());
     }
+
     /**
      * run jpylyzer on the given file and return the xml report as an inputstream.
      *
@@ -48,7 +45,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> {
      *                     returned non-zero returncode)
      */
     private InputStream jpylize(Path dataPath) throws IOException {
-        ProcessRunner runner = new ProcessRunner(jpylyzerPath, dataPath.toString());
+        ProcessRunner runner = new ProcessRunner(configuration.get("jpylyzerPath"), dataPath.toString());
         Map<String, String> myEnv = getJenkinsEnvironment();
         runner.setEnviroment(myEnv);
         runner.setOutputCollectionByteSize(Integer.MAX_VALUE);
@@ -70,4 +67,13 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> {
         return sysEnv;
     }
 
+	@Override
+	public void setConf(Configuration conf) {
+		this.configuration = conf; 
+	}
+
+	@Override
+	public Configuration getConf() {
+		return configuration;
+	}
 }
