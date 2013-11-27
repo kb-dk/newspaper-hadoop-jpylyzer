@@ -45,7 +45,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text> implemen
      *                     returned non-zero returncode)
      */
     private InputStream jpylize(Path dataPath) throws IOException {
-        ProcessRunner runner = new ProcessRunner(configuration.get("jpylyzerPath"), dataPath.toString());
+        ProcessRunner runner = new ProcessRunner(configuration.get(ConfigConstants.JPYLYZER_PATH), dataPath.toString());
         Map<String, String> myEnv = getJenkinsEnvironment();
         runner.setEnviroment(myEnv);
         runner.setOutputCollectionByteSize(Integer.MAX_VALUE);

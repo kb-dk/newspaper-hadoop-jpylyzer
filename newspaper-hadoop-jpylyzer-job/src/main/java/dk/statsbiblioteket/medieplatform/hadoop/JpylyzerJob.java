@@ -1,7 +1,5 @@
 package dk.statsbiblioteket.medieplatform.hadoop;
 
-import java.io.IOException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -11,14 +9,17 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import java.io.IOException;
+
 public class JpylyzerJob {
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException{
-		new JpylyzerJob().runJob(args[0], args[1]);
+        int code = new JpylyzerJob().runJob(args[0], args[1]);
+        System.exit(code);
 	}
 
     //TODO use for something
-    public void runJob(String inputFiles, String outputFolder) throws
+    public int runJob(String inputFiles, String outputFolder) throws
                                                                IOException,
                                                                ClassNotFoundException,
                                                                InterruptedException {
@@ -27,8 +28,12 @@ public class JpylyzerJob {
         job.setMapperClass(JpylyzerMapper.class);
         
         Configuration configuration = job.getConfiguration();
-        configuration.set("jpylyzerPath", "jpylyzer.py");
-        
+        configuration.setIfUnset(ConfigConstants.JPYLYZER_PATH, "jpylyzer.py");
+        configuration.setIfUnset(ConfigConstants.DOMS_URL,"http://achernar:7880/fedora");
+        configuration.setIfUnset(ConfigConstants.DOMS_USERNAME,"fedoraAdmin");
+        configuration.setIfUnset(ConfigConstants.DOMS_PASSWORD,"fedoraAdminPass");
+
+
         //job.setReducerClass(AllTranslationsReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
@@ -41,6 +46,6 @@ public class JpylyzerJob {
         FileInputFormat.addInputPath(job, new Path(inputFiles));
         FileOutputFormat.setOutputPath(job, new Path(outputFolder));
         boolean result = job.waitForCompletion(true);
-        System.exit(result ? 0 : 1);
+        return result ? 0 : 1;
     }
 }
