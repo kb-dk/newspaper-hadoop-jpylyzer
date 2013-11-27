@@ -20,14 +20,11 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <!--
-                                        <archive>
-                                            <manifest>
-                                                <addClasspath>true</addClasspath>
-                                                <mainClass>org.myorg.WordCount</mainClass>
-                                            </manifest>
-                                        </archive>
-                    -->
+                    <archive>
+                        <manifest>
+                            <mainClass>dk.statsbibliokeket.medieplatform.hadoop.JpylyzerJob</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
                 <executions>
                     <execution>
