@@ -14,7 +14,6 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,9 +23,20 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> implements Co
     private EnhancedFedora fedora;
     private Configuration conf;
 
-    public DomsSaverReducer() throws JAXBException, PIDGeneratorException, MalformedURLException {
-        fedora = new EnhancedFedoraImpl(new Credentials(conf.get(ConfigConstants.DOMS_USERNAME),conf.get(ConfigConstants.DOMS_PASSWORD)),conf.get(
-                ConfigConstants.DOMS_URL),null,null);
+
+    @Override
+    protected void setup(Context context) throws IOException, InterruptedException {
+        super.setup(context);
+        fedora = createFedoraClient();
+    }
+
+    protected EnhancedFedora createFedoraClient() throws IOException {
+        try {
+            return new EnhancedFedoraImpl(new Credentials(conf.get(ConfigConstants.DOMS_USERNAME),conf.get(ConfigConstants.DOMS_PASSWORD)),conf.get(
+                            ConfigConstants.DOMS_URL),null,null);
+        } catch (PIDGeneratorException | JAXBException e) {
+            throw new IOException(e);
+        }
     }
 
     @Override

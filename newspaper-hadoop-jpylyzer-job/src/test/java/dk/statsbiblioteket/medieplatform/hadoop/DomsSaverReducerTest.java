@@ -6,7 +6,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,14 +28,20 @@ public class DomsSaverReducerTest {
                                BackendInvalidResourceException {
         ReduceDriver<Text, Text, Text, Text> reduceDriver;
 
-        EnhancedFedora fedora = mock(EnhancedFedora.class);
+        final EnhancedFedora fedora = mock(EnhancedFedora.class);
         String testPid = "uuid:testPid";
         when(fedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));
         doNothing().when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
-        reduceDriver = ReduceDriver.newReduceDriver(new DomsSaverReducer(fedora));
+        reduceDriver = ReduceDriver.newReduceDriver(new DomsSaverReducer() {
+            @Override
+            protected EnhancedFedora createFedoraClient() throws IOException {
+                return fedora;
+            }
+        });
         reduceDriver.withInput(new Text("testFile"),Arrays.asList(new Text("<jpylyzer/>")));
         reduceDriver.withOutput(new Text("testFile"),new Text(testPid));
         reduceDriver.runTest();
+
     }
 
 }
