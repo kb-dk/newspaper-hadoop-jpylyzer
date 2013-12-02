@@ -31,15 +31,24 @@ public class DomsSaverReducerTest {
         final EnhancedFedora fedora = mock(EnhancedFedora.class);
         String testPid = "uuid:testPid";
         when(fedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));
-        doNothing().when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
+        doNothing().when(fedora).modifyDatastreamByValue(
+                eq(testPid),
+                eq("JPYLYZER"),
+                anyString(),
+                anyList(),
+                anyString());
+
         reduceDriver = ReduceDriver.newReduceDriver(new DomsSaverReducer() {
             @Override
             protected EnhancedFedora createFedoraClient(Context context) throws IOException {
                 return fedora;
             }
         });
-        reduceDriver.withInput(new Text("testFile"),Arrays.asList(new Text("<jpylyzer/>")));
-        reduceDriver.withOutput(new Text("testFile"),new Text(testPid));
+        String batchID = "B400022028241-RT1";
+        reduceDriver.getConfiguration().setIfUnset("batchID", batchID);
+        Text key = new Text(batchID + "/testFile");
+        reduceDriver.withInput(key,Arrays.asList(new Text("<jpylyzer/>")));
+        reduceDriver.withOutput(key,new Text(testPid));
         reduceDriver.runTest();
 
     }

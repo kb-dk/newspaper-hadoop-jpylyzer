@@ -32,7 +32,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
      */
     protected static InputStream jpylize(Path dataPath, String jpylyzerPath) throws IOException {
         ProcessRunner runner = new ProcessRunner(jpylyzerPath, dataPath.toString());
-        Map<String, String> myEnv = new HashMap<>(System.getenv());
+        Map<String, String> myEnv = new HashMap<String,String>(System.getenv());
         runner.setEnviroment(myEnv);
         runner.setOutputCollectionByteSize(Integer.MAX_VALUE);
 

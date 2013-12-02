@@ -6,9 +6,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mrunit.mapreduce.MapDriver;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
-import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +35,8 @@ public class JPylyzerJobTest {
         mapReduceDriver = new MapReduceDriver<LongWritable, Text, Text, Text, Text, Text>();
 
         JpylyzerMapper mapper = new JpylyzerMapper();
-        File testFolder = new File(Thread.currentThread().getContextClassLoader().getResource("balloon.jp2").toURI()).getParentFile().getParentFile().getParentFile();
+        File testFolder = new File(Thread.currentThread().getContextClassLoader().getResource(
+                "B400022028241-RT1/balloon.jp2").toURI()).getParentFile().getParentFile().getParentFile();
         File jpylyzerPath = new File(testFolder, "src/test/extras/jpylyzer-1.10.1/jpylyzer.py");
         mapReduceDriver.setMapper(mapper);
         mapReduceDriver.getConfiguration().set(ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
@@ -61,7 +60,7 @@ public class JPylyzerJobTest {
      */
     @Test
     public void testMapReduce() throws IOException, URISyntaxException {
-        String name = "balloon.jp2";
+        String name = "B400022028241-RT1/balloon.jp2";
         String testFile = getAbsolutePath(name);
 
 
@@ -76,7 +75,7 @@ public class JPylyzerJobTest {
     }
 
     @Test
-    public void testJob() throws InterruptedException, IOException, ClassNotFoundException, URISyntaxException {
+    public void testJob() throws Exception {
          //TODO test the Jpylyzer job class
         String fileListFileName = "jp2-file-list_balloon_balloon.txt";
         String fileListFile = getAbsolutePath(fileListFileName);
