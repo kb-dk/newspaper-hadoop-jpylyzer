@@ -26,7 +26,7 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
         fedora = createFedoraClient(context);
-        batchID = context.getConfiguration().get("batchID");
+        batchID = context.getConfiguration().get(Utils.BATCH_ID);
 
     }
 

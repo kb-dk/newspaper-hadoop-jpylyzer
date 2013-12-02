@@ -45,7 +45,7 @@ public class DomsSaverReducerTest {
             }
         });
         String batchID = "B400022028241-RT1";
-        reduceDriver.getConfiguration().setIfUnset("batchID", batchID);
+        reduceDriver.getConfiguration().setIfUnset(Utils.BATCH_ID, batchID);
         Text key = new Text(batchID + "/testFile");
         reduceDriver.withInput(key,Arrays.asList(new Text("<jpylyzer/>")));
         reduceDriver.withOutput(key,new Text(testPid));
