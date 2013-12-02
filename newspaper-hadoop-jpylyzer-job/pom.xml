@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dk.statsbiblioteket.scape.test</groupId>
+        <groupId>dk.statsbiblioteket.medieplatform.hadoop</groupId>
         <artifactId>newspaper-hadoop-jpylyzer</artifactId>
         <version>1.1-SNAPSHOT</version>
     </parent>

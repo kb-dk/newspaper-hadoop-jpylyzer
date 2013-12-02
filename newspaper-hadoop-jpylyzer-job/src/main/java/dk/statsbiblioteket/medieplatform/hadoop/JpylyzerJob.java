@@ -18,7 +18,6 @@ public class JpylyzerJob {
         System.exit(code);
 	}
 
-    //TODO use for something
     public int runJob(String inputFiles, String outputFolder) throws
                                                                IOException,
                                                                ClassNotFoundException,
@@ -34,7 +33,7 @@ public class JpylyzerJob {
         configuration.setIfUnset(ConfigConstants.DOMS_PASSWORD,"fedoraAdminPass");
 
 
-        //job.setReducerClass(AllTranslationsReducer.class);
+        job.setReducerClass(DomsSaverReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setMapOutputKeyClass(Text.class);

@@ -11,7 +11,7 @@
         <version>1.0</version>
     </parent>
     <artifactId>newspaper-hadoop-jpylyzer</artifactId>
-    <groupId>dk.statsbiblioteket.scape.test</groupId>
+    <groupId>dk.statsbiblioteket.medieplatform.hadoop</groupId>
     <version>1.1-SNAPSHOT</version>
     <repositories>
         <repository>
@@ -69,7 +69,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>autonomous-component</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.1</version>
             </dependency>
 
             <dependency>

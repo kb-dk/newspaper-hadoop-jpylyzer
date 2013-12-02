@@ -17,23 +17,23 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> implements Configurable {
+public class DomsSaverReducer extends Reducer<Text, Text, Text, Text>  {
 
 
     private EnhancedFedora fedora;
-    private Configuration conf;
 
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
-        fedora = createFedoraClient();
+        fedora = createFedoraClient(context);
     }
 
-    protected EnhancedFedora createFedoraClient() throws IOException {
+    protected EnhancedFedora createFedoraClient(Context context) throws IOException {
         try {
-            return new EnhancedFedoraImpl(new Credentials(conf.get(ConfigConstants.DOMS_USERNAME),conf.get(ConfigConstants.DOMS_PASSWORD)),conf.get(
-                            ConfigConstants.DOMS_URL),null,null);
+            Configuration conf = context.getConfiguration();
+            return new EnhancedFedoraImpl(new Credentials(conf.get(ConfigConstants.DOMS_USERNAME), conf.get(ConfigConstants.DOMS_PASSWORD)), conf.get(
+                    ConfigConstants.DOMS_URL), null, null);
         } catch (PIDGeneratorException | JAXBException e) {
             throw new IOException(e);
         }
@@ -44,9 +44,9 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> implements Co
         String pid = getDomsPid(key);
         for (Text value : values) {
             try {
-                fedora.modifyDatastreamByValue(pid,"JPYLYZER",value.toString(),
-                        Arrays.asList(translate(key.toString())+".jpylyzer.xml"),"added Jpylyzer output from Hadoop");
-                context.write(key,new Text(pid));
+                fedora.modifyDatastreamByValue(pid, "JPYLYZER", value.toString(),
+                        Arrays.asList(translate(key.toString()) + ".jpylyzer.xml"), "added Jpylyzer output from Hadoop");
+                context.write(key, new Text(pid));
             } catch (BackendInvalidCredsException | BackendMethodFailedException | BackendInvalidResourceException e) {
                 throw new IOException(e);
             }
@@ -55,8 +55,8 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> implements Co
 
     private String getDomsPid(Text key) throws IOException {
         try {
-            List<String> hits = fedora.findObjectFromDCIdentifier("path:"+translate(key.toString()));
-            if (hits.isEmpty()){
+            List<String> hits = fedora.findObjectFromDCIdentifier("path:" + translate(key.toString()));
+            if (hits.isEmpty()) {
                 return null;
             } else {
                 return hits.get(0);
@@ -67,16 +67,8 @@ public class DomsSaverReducer extends Reducer<Text,Text,Text,Text> implements Co
     }
 
     private String translate(String file) {
-        return file.replaceAll("_","/");
+        return file.replaceAll("_", "/");
     }
 
-    @Override
-    public void setConf(Configuration conf) {
-        this.conf = conf;
-    }
 
-    @Override
-    public Configuration getConf() {
-        return conf;
-    }
 }

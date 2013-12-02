@@ -34,7 +34,7 @@ public class DomsSaverReducerTest {
         doNothing().when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
         reduceDriver = ReduceDriver.newReduceDriver(new DomsSaverReducer() {
             @Override
-            protected EnhancedFedora createFedoraClient() throws IOException {
+            protected EnhancedFedora createFedoraClient(Context context) throws IOException {
                 return fedora;
             }
         });
