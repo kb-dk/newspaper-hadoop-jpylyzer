@@ -22,7 +22,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>dk.statsbibliokeket.medieplatform.hadoop.JpylyzerJob</mainClass>
+                            <mainClass>dk.statsbiblioteket.medieplatform.hadoop.JpylyzerJob</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
