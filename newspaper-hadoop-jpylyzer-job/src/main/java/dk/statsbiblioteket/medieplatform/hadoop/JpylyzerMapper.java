@@ -16,7 +16,13 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
 
 	@Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        context.write(value, Utils.asText(jpylize(new Path(value.toString()), context.getConfiguration().get(ConfigConstants.JPYLYZER_PATH))));
+        String jpylyzerPath = context.getConfiguration()
+                                     .get(ConfigConstants.JPYLYZER_PATH);
+        System.out
+              .println(jpylyzerPath);
+        InputStream jpylize = jpylize(new Path(value.toString()), jpylyzerPath);
+        Text text = Utils.asText(jpylize);
+        context.write(value, text);
     }
 
 
@@ -31,6 +37,8 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
      *                     returned non-zero returncode)
      */
     protected static InputStream jpylize(Path dataPath, String jpylyzerPath) throws IOException {
+        System.out
+              .println("jpylyzing '"+dataPath+"' with '"+jpylyzerPath+"'");
         ProcessRunner runner = new ProcessRunner(jpylyzerPath, dataPath.toString());
         Map<String, String> myEnv = new HashMap<String,String>(System.getenv());
         runner.setEnviroment(myEnv);

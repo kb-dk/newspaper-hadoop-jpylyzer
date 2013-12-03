@@ -24,18 +24,19 @@ public class JpylyzerJob implements Tool {
 
     @Override
     public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-        Job job = Job.getInstance(getConf());
-        job.setJarByClass(JpylyzerJob.class);
-        job.setMapperClass(JpylyzerMapper.class);
 
-        Configuration configuration = job.getConfiguration();
+
+        Configuration configuration = getConf();
         configuration.setIfUnset(ConfigConstants.JPYLYZER_PATH, "jpylyzer.py");
         configuration.setIfUnset(ConfigConstants.DOMS_URL, "http://achernar:7880/fedora");
         configuration.setIfUnset(ConfigConstants.DOMS_USERNAME, "fedoraAdmin");
         configuration.setIfUnset(ConfigConstants.DOMS_PASSWORD, "fedoraAdminPass");
-
-
+        Job job = Job.getInstance(configuration);
+                job.setJarByClass(JpylyzerJob.class);
+                job.setMapperClass(JpylyzerMapper.class);
         job.setReducerClass(DomsSaverReducer.class);
+
+
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setMapOutputKeyClass(Text.class);
@@ -46,7 +47,10 @@ public class JpylyzerJob implements Tool {
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
         boolean result = job.waitForCompletion(true);
+        System.out
+              .println(job.toString());
         return result ? 0 : 1;
     }
 
