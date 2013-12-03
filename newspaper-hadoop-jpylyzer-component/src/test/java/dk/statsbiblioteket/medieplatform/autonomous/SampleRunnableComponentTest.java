@@ -23,6 +23,10 @@ public class SampleRunnableComponentTest {
         properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER,"inputFiles");
         properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX,"jpeg2k/");
         properties.setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
+        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.FS_DEFAULT_NAME, "hdfs://phd-stage-master-01.statsbiblioteket.dk:8020");
+        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.YARN_RESOURCEMANAGER_ADDRESS, "phd-stage-master-01.statsbiblioteket.dk:8032");
+        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.HADOOP_USER, "newspapr");
+
         //properties.setProperty(ConfigConstants.JPYLYZER_PATH,"/usr/lib/python2.7/site-packages/jpylyzer/jpylyzer.py");
         properties.setProperty(ConfigConstants.JPYLYZER_PATH,"echo");
 
