@@ -17,7 +17,7 @@
 
     <xsl:template match="//node[substring(@shortName, string-length(@shortName) - 3) = '.jp2']">
         <xsl:value-of select="$prefix"/>
-        <xsl:value-of select="@name"/>
+        <xsl:value-of select="translate(@name,'/','_')"/>
         <xsl:text>&#xa;</xsl:text>
     </xsl:template>
 
