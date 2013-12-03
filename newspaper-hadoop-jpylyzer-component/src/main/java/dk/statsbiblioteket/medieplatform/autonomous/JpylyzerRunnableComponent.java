@@ -1,19 +1,30 @@
 package dk.statsbiblioteket.medieplatform.autonomous;
 
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.ParsingEvent;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
+import dk.statsbiblioteket.medieplatform.hadoop.*;
+import dk.statsbiblioteket.util.xml.XSLT;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.PrivilegedExceptionAction;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
+    public static final String JOB_FOLDER = "job.folder";
+    public static final String PREFIX = "prefix";
     private static Logger log = LoggerFactory.getLogger(JpylyzerRunnableComponent.class);
-
-
 
 
     /**
@@ -21,7 +32,9 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
      * If you do not need the tree iterator, ignore properties.
      *
      * You can use properties for your own stuff as well
+     *
      * @param properties properties
+     *
      * @see #getProperties()
      */
     public JpylyzerRunnableComponent(Properties properties) {
@@ -36,60 +49,77 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
     }
 
     @Override
-    public void doWorkOnBatch(Batch batch,
-                              ResultCollector resultCollector)
-            throws
-            Exception {
-        //This is the working method of the component
+    public void doWorkOnBatch(Batch batch, ResultCollector resultCollector) throws Exception {
 
-        //IT REALLY MUST BE THREAD SAFE. Multiple threads can invoke this concurrently. Do not use instance variables!
+        //create the input as a file on the cluster
+        Configuration conf = new Configuration();
 
-        //Create a tree iterator for the batch. It will be created based on the properties that is handled in the constructor
-        TreeIterator iterator = createIterator(batch);
+        conf.set("fs.default.name", "hdfs://phd-stage-master-01.statsbiblioteket.dk:8020");
+        conf.set("yarn.resourcemanager.address", "phd-stage-master-01.statsbiblioteket.dk:8032");
 
-        //The work of this component is just to count the number of files and directories
-        int numberOfFiles = 0;
-        int numberOfDirectories = 0;
-        while (iterator.hasNext()) {
-            ParsingEvent next = iterator.next();
-            switch (next.getType()) {
-                case NodeBegin: {
-                    //This is the event when we enter a new "directory"
-                    //After this event, there will come a series of AttributeEvents, corresponding to the files in the folder
-                    //Then there will come a NodeBegin event if there is any subfolders, and the process repeats
-                    numberOfDirectories += 1;
-                    break;
-                }
-                case NodeEnd: {
-                    //This is the event when we have handled all files and subfolders in a folder. This event is
-                    //thrown just before we leave the folder
-                    break;
-                }
-                case Attribute: {
-                    //This represents a file in the tree
-                    numberOfFiles += 1;
+        conf.set(ConfigConstants.JPYLYZER_PATH,getProperties().getProperty(ConfigConstants.JPYLYZER_PATH));
+        String user = "newspapr";
+        FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
-                    //Cast the event to a attributeEvent
-                    AttributeParsingEvent attributeEvent = (AttributeParsingEvent) next;
+        //setup the dirs
+        Path inputFile = new Path(
+                getProperties().getProperty(JOB_FOLDER), "input_" + batch.getFullID() + "_files.txt");
+        Path outDir = new Path(
+                getProperties().getProperty(JOB_FOLDER), "output_" + batch.getFullID());
 
-                    //Check that the checksum is readable.
-                    String checksum = attributeEvent.getChecksum();
-                    if (checksum == null){
-                        //If there is no checksum, report a failure.
-                        resultCollector
-                                .addFailure(attributeEvent.getName(), "filestructure", getClass().getSimpleName(),
-                                            "Missing checksum");
+        //make file list stream from batch structure
+        FSDataOutputStream fileoutStream = fs.create(
+                inputFile);
+        getFileList(batch, fileoutStream);
+        fileoutStream.close();
+
+        runJob(batch, resultCollector, conf, inputFile, outDir, user);
+
+
+    }
+
+    private void runJob(final Batch batch, final ResultCollector resultCollector, final Configuration conf,
+                        final Path inputFile, final Path outDir, String username) throws
+                                                                                  IOException,
+                                                                                  InterruptedException {
+        //upload job to cluster if not already present
+        //execute job on file
+
+        UserGroupInformation ugi = UserGroupInformation.createRemoteUser(username);
+        ugi.doAs(
+                new PrivilegedExceptionAction<ResultCollector>() {
+                    public ResultCollector run() throws Exception {
+
+                        Tool job = new JpylyzerJob();
+                        job.setConf(conf);
+                        try {
+                            int result = ToolRunner.run(
+                                    conf, new JpylyzerJob(), new String[]{inputFile.toString(), outDir.toString()});
+                            if (result != 0) {
+                                resultCollector.addFailure(
+                                        batch.getFullID(),
+                                        "jp2file",
+                                        getClass().getName(),
+                                        "Failed to run on this batch");
+                            }
+                        } catch (Exception e) {
+                            resultCollector.addFailure(
+                                    batch.getFullID(), "exception", getClass().getName(), e.toString());
+                        }
+                        return resultCollector;
                     }
-                    break;
-                }
-            }
+                });
 
-        }
-        if (numberOfFiles < 5){
-            resultCollector.addFailure(batch.getFullID(), "filestructure", getClass().getSimpleName(),
-                                       "There are to few files in the batch");
-        }
-        //And finally set the timestamp of the execution.
-        resultCollector.setTimestamp(new Date());
+    }
+
+    private void getFileList(Batch batch, OutputStream outputStream) throws IOException, TransformerException {
+        InputStream structure = retrieveBatchStructure(batch);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(PREFIX, getProperties().getProperty(PREFIX));
+        XSLT.transform(
+                Thread.currentThread()
+                      .getContextClassLoader()
+                      .getResource("fileNamesFromStructure.xslt"), structure, outputStream, params);
+
     }
 }
