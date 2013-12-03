@@ -31,8 +31,7 @@
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
-                <version>2.2.0</version>
-                <scope>provided</scope>
+                <version>2.0.2-alpha</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.sbutil</groupId>
@@ -69,7 +68,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>autonomous-component</artifactId>
-                <version>1.1</version>
+                <version>1.2-SNAPSHOT</version>
             </dependency>
 
             <dependency>
