@@ -30,8 +30,13 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
+        System.out
+              .println("Setup called for reducer");
         fedora = createFedoraClient(context);
-        batchID = context.getConfiguration().get(ConfigConstants.BATCH_ID);
+        batchID = context.getConfiguration()
+                         .get(ConfigConstants.BATCH_ID);
+        System.out
+              .println("batchID read as " + batchID);
 
     }
 
@@ -39,18 +44,25 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
      * Get the fedora client
      *
      * @param context the hadoop context
-     * @return      the fedora client
+     *
+     * @return the fedora client
      * @throws IOException
      */
     protected EnhancedFedora createFedoraClient(Context context) throws IOException {
         try {
             Configuration conf = context.getConfiguration();
+
+            String username = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME);
+            String password = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD);
+            String domsUrl = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL);
+            System.out
+                  .println(username);
+            System.out
+                  .println(password);
+            System.out
+                  .println(domsUrl);
             return new EnhancedFedoraImpl(
-                    new Credentials(conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME), conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD)),
-                    conf.get(
-                            dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL),
-                    null,
-                    null);
+                    new Credentials(username, password),domsUrl , null, null);
         } catch (JAXBException e) {
             throw new IOException(e);
         } catch (PIDGeneratorException e) {
@@ -60,15 +72,20 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
 
     /**
      * Reducde (save result in doms)
+     *
      * @param key
      * @param values
      * @param context
+     *
      * @throws IOException
      * @throws InterruptedException
      */
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         String pid = getDomsPid(key);
+        System.out
+              .println(pid);
+
         for (Text value : values) {
             try {
                 fedora.modifyDatastreamByValue(
@@ -91,17 +108,20 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
 
     /**
      * Get the doms pid from the filename
+     *
      * @param key the filename
+     *
      * @return the doms pid
      * @throws IOException
      */
     private String getDomsPid(Text key) throws IOException {
         try {
-            List<String> hits = fedora.findObjectFromDCIdentifier("path:" + translate(key.toString()));
+            String filePath = translate(key.toString());
+            String path = "path:" + filePath;
+            List<String> hits = fedora.findObjectFromDCIdentifier(path);
             if (hits.isEmpty()) {
-                System.out
-                        .println("No pid found for path '" + translate(key.toString() + "'"));
-                return null;
+
+                throw new RuntimeException("Failed to look up doms object for DC identifier '"+path+"'");
             } else {
                 return hits.get(0);
             }
@@ -114,12 +134,14 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
 
     /**
      * Translate the filename back to the original path as stored in doms
+     *
      * @param file the filename
+     *
      * @return the original path
      */
     private String translate(String file) {
         return file.substring(file.indexOf(batchID))
-                .replaceAll("_", "/");
+                   .replaceAll("_", "/");
     }
 
 
