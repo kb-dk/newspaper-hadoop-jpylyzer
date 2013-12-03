@@ -24,7 +24,7 @@ public class JpylyzerMapperTest {
         MapDriver<LongWritable, Text, Text, Text> mapDriver;
         JpylyzerMapper mapper = new JpylyzerMapper();
         mapDriver = MapDriver.newMapDriver(mapper);
-        mapDriver.getConfiguration().set(ConfigConstants.JPYLYZER_PATH, "echo");
+        mapDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH, "echo");
 
         mapDriver.withInput(new LongWritable(1), new Text("ein"));
         mapDriver.withOutput(new Text("ein"), new Text("ein"));
@@ -41,7 +41,7 @@ public class JpylyzerMapperTest {
         File testFolder = new File(Thread.currentThread().getContextClassLoader().getResource(
                 name).toURI()).getParentFile().getParentFile().getParentFile().getParentFile();
         File jpylyzerPath = new File(testFolder, "src/test/extras/jpylyzer-1.10.1/jpylyzer.py");
-        mapDriver.getConfiguration().set(ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
+        mapDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
 
 
         String testFile = getAbsolutePath(name);

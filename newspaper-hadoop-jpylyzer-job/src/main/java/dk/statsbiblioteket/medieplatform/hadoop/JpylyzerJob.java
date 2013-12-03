@@ -13,6 +13,9 @@ import org.apache.hadoop.util.ToolRunner;
 
 import java.io.IOException;
 
+/**
+ * The jpylyzer job. Eats a text file containing paths to jpegs, runs jpylyzer on each and looks up the path in doms to store the result.
+ */
 public class JpylyzerJob implements Tool {
 
     private Configuration conf;
@@ -22,15 +25,23 @@ public class JpylyzerJob implements Tool {
         System.exit(res);
     }
 
+    /**
+     * Run the job with the args
+     * @param args first argument is a path to a file listing the jpeg2k files to work on. Second argument is to the output dir
+     * @return return code, 0 is success
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
     @Override
     public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
 
         Configuration configuration = getConf();
-        configuration.setIfUnset(ConfigConstants.JPYLYZER_PATH, "jpylyzer.py");
-        configuration.setIfUnset(ConfigConstants.DOMS_URL, "http://achernar:7880/fedora");
-        configuration.setIfUnset(ConfigConstants.DOMS_USERNAME, "fedoraAdmin");
-        configuration.setIfUnset(ConfigConstants.DOMS_PASSWORD, "fedoraAdminPass");
+        configuration.setIfUnset(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH, "jpylyzer.py");
+        configuration.setIfUnset(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL, "http://achernar:7880/fedora");
+        configuration.setIfUnset(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME, "fedoraAdmin");
+        configuration.setIfUnset(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD, "fedoraAdminPass");
         Job job = Job.getInstance(configuration);
                 job.setJarByClass(JpylyzerJob.class);
                 job.setMapperClass(JpylyzerMapper.class);

@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This reducer saves the result in doms
+ * The input is filepath, jpylyzer xml output
+ * The output is filepath, domspid
+ */
 public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
 
 
@@ -26,17 +31,24 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
         fedora = createFedoraClient(context);
-        batchID = context.getConfiguration().get(Utils.BATCH_ID);
+        batchID = context.getConfiguration().get(ConfigConstants.BATCH_ID);
 
     }
 
+    /**
+     * Get the fedora client
+     *
+     * @param context the hadoop context
+     * @return      the fedora client
+     * @throws IOException
+     */
     protected EnhancedFedora createFedoraClient(Context context) throws IOException {
         try {
             Configuration conf = context.getConfiguration();
             return new EnhancedFedoraImpl(
-                    new Credentials(conf.get(ConfigConstants.DOMS_USERNAME), conf.get(ConfigConstants.DOMS_PASSWORD)),
+                    new Credentials(conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME), conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD)),
                     conf.get(
-                            ConfigConstants.DOMS_URL),
+                            dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL),
                     null,
                     null);
         } catch (JAXBException e) {
@@ -46,6 +58,14 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
         }
     }
 
+    /**
+     * Reducde (save result in doms)
+     * @param key
+     * @param values
+     * @param context
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         String pid = getDomsPid(key);
@@ -69,26 +89,37 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
         }
     }
 
+    /**
+     * Get the doms pid from the filename
+     * @param key the filename
+     * @return the doms pid
+     * @throws IOException
+     */
     private String getDomsPid(Text key) throws IOException {
         try {
             List<String> hits = fedora.findObjectFromDCIdentifier("path:" + translate(key.toString()));
             if (hits.isEmpty()) {
                 System.out
-                      .println("No pid found for path '"+translate(key.toString()+"'"));
+                        .println("No pid found for path '" + translate(key.toString() + "'"));
                 return null;
             } else {
                 return hits.get(0);
             }
-        } catch ( BackendMethodFailedException e) {
+        } catch (BackendMethodFailedException e) {
             throw new IOException(e);
-        } catch (BackendInvalidCredsException  e) {
+        } catch (BackendInvalidCredsException e) {
             throw new IOException(e);
         }
     }
 
+    /**
+     * Translate the filename back to the original path as stored in doms
+     * @param file the filename
+     * @return the original path
+     */
     private String translate(String file) {
         return file.substring(file.indexOf(batchID))
-                            .replaceAll("_", "/");
+                .replaceAll("_", "/");
     }
 
 

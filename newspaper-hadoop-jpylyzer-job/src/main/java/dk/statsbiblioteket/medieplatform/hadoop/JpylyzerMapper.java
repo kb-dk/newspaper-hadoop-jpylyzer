@@ -11,15 +11,17 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Input is line-number, line text. The text is the path to a file to run jpylyzer on
+ * Output is line text, jpylyzer output xml
+ */
 public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
 
 
 	@Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String jpylyzerPath = context.getConfiguration()
-                                     .get(ConfigConstants.JPYLYZER_PATH);
-        System.out
-              .println(jpylyzerPath);
+                                     .get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH);
         InputStream jpylize = jpylize(new Path(value.toString()), jpylyzerPath);
         Text text = Utils.asText(jpylize);
         context.write(value, text);
@@ -31,6 +33,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
      *
      *
      * @param dataPath the path to the jp2 file
+     *                 @param jpylyzerPath the path to the jpylyzer executable
      *
      * @return the jpylyzer xml report
      * @throws IOException if the execution of jpylyzer failed in some fashion (not invalid file, if the program

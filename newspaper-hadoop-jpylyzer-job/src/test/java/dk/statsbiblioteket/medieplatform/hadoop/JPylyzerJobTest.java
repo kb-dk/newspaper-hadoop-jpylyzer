@@ -39,7 +39,7 @@ public class JPylyzerJobTest {
                 "B400022028241-RT1/balloon.jp2").toURI()).getParentFile().getParentFile().getParentFile();
         File jpylyzerPath = new File(testFolder, "src/test/extras/jpylyzer-1.10.1/jpylyzer.py");
         mapReduceDriver.setMapper(mapper);
-        mapReduceDriver.getConfiguration().set(ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
+        mapReduceDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
 
         final EnhancedFedora fedora = mock(EnhancedFedora.class);
         when(fedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));

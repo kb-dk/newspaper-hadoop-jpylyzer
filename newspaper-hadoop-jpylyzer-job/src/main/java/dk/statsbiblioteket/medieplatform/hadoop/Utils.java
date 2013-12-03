@@ -8,9 +8,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class Utils {
-    static final String BATCH_ID = "batchID";
 
-    static Text asText(InputStream inputStream) throws IOException {
+    /**
+     * Utility method to read an inputstream to a hadoop text
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static Text asText(InputStream inputStream) throws IOException {
         StringBuilder builder = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
