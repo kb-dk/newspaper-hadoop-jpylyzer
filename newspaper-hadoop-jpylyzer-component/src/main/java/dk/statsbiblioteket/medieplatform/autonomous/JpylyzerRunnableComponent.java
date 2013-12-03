@@ -1,7 +1,6 @@
 package dk.statsbiblioteket.medieplatform.autonomous;
 
-import dk.statsbiblioteket.medieplatform.hadoop.*;
-import dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants;
+import dk.statsbiblioteket.medieplatform.hadoop.JpylyzerJob;
 import dk.statsbiblioteket.util.xml.XSLT;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -58,7 +57,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
         conf.set(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.BATCH_ID, batch.getFullID());
 
-        String user = conf.get(ConfigConstants.HADOOP_USER, "newspapr");
+        String user = conf.get(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.HADOOP_USER, "newspapr");
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
         //setup the dirs
@@ -107,6 +106,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
                         try {
                             int result = ToolRunner.run(
                                     conf, job, new String[]{inputFile.toString(), outDir.toString()});
+
                             if (result != 0) {
                                 resultCollector.addFailure(
                                         batch.getFullID(),
