@@ -18,10 +18,14 @@ public class SampleRunnableComponentTest {
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
 
+        Batch batch = new Batch("400022028241");
+
         properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER,"inputFiles");
         properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX,"jpeg2k/");
         properties.setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
-        properties.setProperty(ConfigConstants.JPYLYZER_PATH,"/usr/lib/python2.7/site-packages/jpylyzer/jpylyzer.py");
+        //properties.setProperty(ConfigConstants.JPYLYZER_PATH,"/usr/lib/python2.7/site-packages/jpylyzer/jpylyzer.py");
+        properties.setProperty(ConfigConstants.JPYLYZER_PATH,"echo");
+
 
         JpylyzerRunnableComponent component = new JpylyzerRunnableComponent(properties){
             @Override
@@ -30,7 +34,8 @@ public class SampleRunnableComponentTest {
             }
         };
         ResultCollector resultCollector = new ResultCollector("crap", "crap");
-        component.doWorkOnBatch(new Batch("400022028241"), resultCollector);
+
+        component.doWorkOnBatch(batch, resultCollector);
         assertTrue(resultCollector.isSuccess(),resultCollector.toReport());
     }
 }

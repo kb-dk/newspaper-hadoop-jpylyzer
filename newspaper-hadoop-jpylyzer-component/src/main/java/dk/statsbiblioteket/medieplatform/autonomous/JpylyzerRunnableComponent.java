@@ -60,6 +60,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         conf.set(YARN_RESOURCEMANAGER_ADDRESS, "phd-stage-master-01.statsbiblioteket.dk:8032");
 
         conf.set(ConfigConstants.JPYLYZER_PATH,getProperties().getProperty(ConfigConstants.JPYLYZER_PATH));
+        conf.set(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.BATCH_ID,batch.getFullID());
 
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
