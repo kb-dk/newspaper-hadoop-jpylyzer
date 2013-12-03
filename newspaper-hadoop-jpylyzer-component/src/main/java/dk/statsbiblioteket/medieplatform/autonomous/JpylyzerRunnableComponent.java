@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.medieplatform.autonomous;
 
-import dk.statsbiblioteket.medieplatform.hadoop.*;
+import dk.statsbiblioteket.medieplatform.hadoop.JpylyzerJob;
 import dk.statsbiblioteket.util.xml.XSLT;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -22,8 +22,8 @@ import java.util.Properties;
 
 public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
-    public static final String JOB_FOLDER = "job.folder";
-    public static final String PREFIX = "prefix";
+    public static final String FS_DEFAULT_NAME = "fs.default.name";
+    public static final String YARN_RESOURCEMANAGER_ADDRESS = "yarn.resourcemanager.address";
     private static Logger log = LoggerFactory.getLogger(JpylyzerRunnableComponent.class);
 
 
@@ -54,18 +54,20 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         //create the input as a file on the cluster
         Configuration conf = new Configuration();
 
-        conf.set("fs.default.name", "hdfs://phd-stage-master-01.statsbiblioteket.dk:8020");
-        conf.set("yarn.resourcemanager.address", "phd-stage-master-01.statsbiblioteket.dk:8032");
+        //TODO move these to config file
+        String user = "newspapr";
+        conf.set(FS_DEFAULT_NAME, "hdfs://phd-stage-master-01.statsbiblioteket.dk:8020");
+        conf.set(YARN_RESOURCEMANAGER_ADDRESS, "phd-stage-master-01.statsbiblioteket.dk:8032");
 
         conf.set(ConfigConstants.JPYLYZER_PATH,getProperties().getProperty(ConfigConstants.JPYLYZER_PATH));
-        String user = "newspapr";
+
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
         //setup the dirs
         Path inputFile = new Path(
-                getProperties().getProperty(JOB_FOLDER), "input_" + batch.getFullID() + "_files.txt");
+                getProperties().getProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER), "input_" + batch.getFullID() + "_files.txt");
         Path outDir = new Path(
-                getProperties().getProperty(JOB_FOLDER), "output_" + batch.getFullID());
+                getProperties().getProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER), "output_" + batch.getFullID());
 
         //make file list stream from batch structure
         FSDataOutputStream fileoutStream = fs.create(
@@ -94,7 +96,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
                         job.setConf(conf);
                         try {
                             int result = ToolRunner.run(
-                                    conf, new JpylyzerJob(), new String[]{inputFile.toString(), outDir.toString()});
+                                    conf, job, new String[]{inputFile.toString(), outDir.toString()});
                             if (result != 0) {
                                 resultCollector.addFailure(
                                         batch.getFullID(),
@@ -115,7 +117,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
     private void getFileList(Batch batch, OutputStream outputStream) throws IOException, TransformerException {
         InputStream structure = retrieveBatchStructure(batch);
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put(PREFIX, getProperties().getProperty(PREFIX));
+        params.put(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX, getProperties().getProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX));
         XSLT.transform(
                 Thread.currentThread()
                       .getContextClassLoader()
