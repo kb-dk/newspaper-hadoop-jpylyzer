@@ -62,7 +62,7 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
             System.out
                   .println(domsUrl);
             return new EnhancedFedoraImpl(
-                    new Credentials(username, password),domsUrl , null, null);
+                    new Credentials(username, password), domsUrl, null, null);
         } catch (JAXBException e) {
             throw new IOException(e);
         } catch (PIDGeneratorException e) {
@@ -85,14 +85,20 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
         String pid = getDomsPid(key);
         System.out
               .println(pid);
-
+        String translate = translate(key.toString());
+        boolean first = false;
         for (Text value : values) {
+            if (!first) {
+                first = true;
+            } else {
+                throw new RuntimeException("Found multiple jpylyzer results for file '" + translate + "'");
+            }
             try {
                 fedora.modifyDatastreamByValue(
                         pid,
                         "JPYLYZER",
                         value.toString(),
-                        Arrays.asList(translate(key.toString()) + ".jpylyzer.xml"),
+                        Arrays.asList(translate + ".jpylyzer.xml"),
                         "added Jpylyzer output from Hadoop");
                 context.write(key, new Text(pid));
             } catch (BackendInvalidCredsException e) {
@@ -121,8 +127,12 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
             List<String> hits = fedora.findObjectFromDCIdentifier(path);
             if (hits.isEmpty()) {
 
-                throw new RuntimeException("Failed to look up doms object for DC identifier '"+path+"'");
+                throw new RuntimeException("Failed to look up doms object for DC identifier '" + path + "'");
             } else {
+                if (hits.size() > 1) {
+                    System.err
+                          .println("Found multipe pids for dc identifier '"+path+"'");
+                }
                 return hits.get(0);
             }
         } catch (BackendMethodFailedException e) {
