@@ -11,6 +11,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.List;
 public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
 
 
+    private static Logger log = Logger.getLogger(JpylyzerJob.class);
     private EnhancedFedora fedora;
     private String batchID = null;
 
@@ -72,16 +74,22 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
      */
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-        String pid = getDomsPid(key);
-        String translate = translate(key.toString());
-        boolean first = false;
-        for (Text value : values) {
-            if (!first) {
-                first = true;
-            } else {
-                throw new RuntimeException("Found multiple jpylyzer results for file '" + translate + "'");
-            }
-            try {
+        try {
+            log.debug("Reduce for file '" + key + "'");
+            String pid = getDomsPid(key);
+            log.debug("Found doms pid '" + pid + "' for key '" + key + "'");
+            String translate = translate(key.toString());
+            log.debug("Translated filename '" + key + "'to '" + translate + "'");
+
+            boolean first = false;
+            for (Text value : values) {
+                if (!first) {
+                    first = true;
+                } else {
+                    log.error("Found multiple jpylyzer results for file '" + translate + "'");
+                    throw new RuntimeException("Found multiple jpylyzer results for file '" + translate + "'");
+                }
+                log.info("Stored jpylyzer output for file '"+translate+"' in object '"+pid+"'");
                 fedora.modifyDatastreamByValue(
                         pid,
                         "JPYLYZER",
@@ -89,15 +97,19 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
                         Arrays.asList(translate + ".jpylyzer.xml"),
                         "added Jpylyzer output from Hadoop");
                 context.write(key, new Text(pid));
-            } catch (BackendInvalidCredsException e) {
-                throw new IOException(e);
-            } catch (BackendMethodFailedException e) {
-                throw new IOException(e);
-            } catch (BackendInvalidResourceException e) {
-                throw new IOException(e);
             }
-
+        } catch (BackendInvalidCredsException e) {
+            log.error(e);
+            throw new IOException(e);
+        } catch (BackendMethodFailedException e) {
+            log.error(e);
+            throw new IOException(e);
+        } catch (BackendInvalidResourceException e) {
+            log.error(e);
+            throw new IOException(e);
         }
+
+
     }
 
     /**
@@ -108,27 +120,21 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
      * @return the doms pid
      * @throws IOException
      */
-    private String getDomsPid(Text key) throws IOException {
-        try {
-            String filePath = translate(key.toString());
-            String path = "path:" + filePath;
-            List<String> hits = fedora.findObjectFromDCIdentifier(path);
-            if (hits.isEmpty()) {
+    private String getDomsPid(Text key) throws BackendInvalidCredsException, BackendMethodFailedException {
 
-                throw new RuntimeException("Failed to look up doms object for DC identifier '" + path + "'");
-            } else {
-                if (hits.size() > 1) {
-                    //TODO log this?
-                    System.err
-                          .println("Found multipe pids for dc identifier '"+path+"'");
-                }
-                return hits.get(0);
+        String filePath = translate(key.toString());
+        String path = "path:" + filePath;
+        List<String> hits = fedora.findObjectFromDCIdentifier(path);
+        if (hits.isEmpty()) {
+
+            throw new RuntimeException("Failed to look up doms object for DC identifier '" + path + "'");
+        } else {
+            if (hits.size() > 1) {
+                log.warn("Found multipe pids for dc identifier '" + path + "'");
             }
-        } catch (BackendMethodFailedException e) {
-            throw new IOException(e);
-        } catch (BackendInvalidCredsException e) {
-            throw new IOException(e);
+            return hits.get(0);
         }
+
     }
 
     /**

@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -20,6 +21,9 @@ import java.io.IOException;
  * store the result.
  */
 public class JpylyzerJob implements Tool {
+
+    private static Logger log = Logger.getLogger(JpylyzerJob.class);
+
 
     private Configuration conf;
 
