@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.medieplatform.hadoop;
 
+import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -12,6 +13,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import java.io.IOException;
+
 
 /**
  * The jpylyzer job. Eats a text file containing paths to jpegs, runs jpylyzer on each and looks up the path in doms to
@@ -43,16 +45,16 @@ public class JpylyzerJob implements Tool {
 
         Configuration configuration = getConf();
         configuration.setIfUnset(
-                dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH,
+                ConfigConstants.JPYLYZER_PATH,
                 "jpylyzer.py");
         configuration.setIfUnset(
-                dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL,
+                ConfigConstants.DOMS_URL,
                 "http://achernar:7880/fedora");
         configuration.setIfUnset(
-                dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME,
+                ConfigConstants.DOMS_USERNAME,
                 "fedoraAdmin");
         configuration.setIfUnset(
-                dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD,
+                ConfigConstants.DOMS_PASSWORD,
                 "fedoraAdminPass");
 
         Job job = Job.getInstance(configuration);
@@ -68,7 +70,9 @@ public class JpylyzerJob implements Tool {
         job.setMapOutputValueClass(Text.class);
 
         job.setInputFormatClass(NLineInputFormat.class);
-        NLineInputFormat.setNumLinesPerSplit(job,1);
+        int filesPerMapTask = configuration.getInt(ConfigConstants.FILES_PER_MAP_TASK,1);
+        NLineInputFormat.setNumLinesPerSplit(job,filesPerMapTask);
+
 
         job.setOutputFormatClass(TextOutputFormat.class);
 

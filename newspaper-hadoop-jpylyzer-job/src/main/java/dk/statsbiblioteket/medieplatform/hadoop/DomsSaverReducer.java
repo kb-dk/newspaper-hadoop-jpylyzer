@@ -7,6 +7,7 @@ import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedoraImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -47,9 +48,9 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
         try {
             Configuration conf = context.getConfiguration();
 
-            String username = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME);
-            String password = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD);
-            String domsUrl = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL);
+            String username = conf.get(ConfigConstants.DOMS_USERNAME);
+            String password = conf.get(ConfigConstants.DOMS_PASSWORD);
+            String domsUrl = conf.get(ConfigConstants.DOMS_URL);
             return new EnhancedFedoraImpl(
                     new Credentials(username, password), domsUrl, null, null);
         } catch (JAXBException e) {

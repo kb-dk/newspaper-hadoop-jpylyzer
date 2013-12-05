@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.medieplatform.hadoop;
 
+import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.util.console.ProcessRunner;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -20,7 +21,7 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
 	@Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         try { String jpylyzerPath = context.getConfiguration()
-                                     .get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH);
+                                     .get(ConfigConstants.JPYLYZER_PATH);
         InputStream jpylize = jpylize(value.toString(), jpylyzerPath);
         Text text = Utils.asText(jpylize);
         context.write(value, text);

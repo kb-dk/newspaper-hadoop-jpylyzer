@@ -53,22 +53,22 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
         //create the input as a file on the cluster
         Configuration conf = new Configuration();
-        getProperties().setProperty(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
+        getProperties().setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
         propertiesToConf(conf, getProperties());
 
-        conf.set(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.BATCH_ID, batch.getFullID());
+        conf.set(ConfigConstants.BATCH_ID, batch.getFullID());
 
-        String user = conf.get(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.HADOOP_USER, "newspapr");
+        String user = conf.get(ConfigConstants.HADOOP_USER, "newspapr");
         conf.set(MRConfig.FRAMEWORK_NAME,MRConfig.YARN_FRAMEWORK_NAME);
 
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
         //setup the dirs
         Path inputFile = new Path(
-                getProperties().getProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER),
+                getProperties().getProperty(ConfigConstants.JOB_FOLDER),
                 "input_" + batch.getFullID() + "_files.txt");
         Path outDir = new Path(
-                getProperties().getProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER),
+                getProperties().getProperty(ConfigConstants.JOB_FOLDER),
                 "output_" + batch.getFullID());
 
         //make file list stream from batch structure
@@ -131,8 +131,8 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         InputStream structure = retrieveBatchStructure(batch);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(
-                dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX,
-                getProperties().getProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX));
+                ConfigConstants.PREFIX,
+                getProperties().getProperty(ConfigConstants.PREFIX));
         XSLT.transform(
                 Thread.currentThread()
                       .getContextClassLoader()
