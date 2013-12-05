@@ -3,8 +3,6 @@ package dk.statsbiblioteket.medieplatform.autonomous;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import static org.testng.Assert.assertTrue;
@@ -20,23 +18,14 @@ public class SampleRunnableComponentTest {
 
         Batch batch = new Batch("400022028241");
 
+
         properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.JOB_FOLDER,"inputFiles");
-        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX,"jpeg2k/");
-        properties.setProperty(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
-        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.FS_DEFAULT_NAME, "hdfs://phd-stage-master-01.statsbiblioteket.dk:8020");
-        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.YARN_RESOURCEMANAGER_ADDRESS, "phd-stage-master-01.statsbiblioteket.dk:8032");
+        properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.PREFIX,"/net/zone1.isilon.sblokalnet/ifs/archive/bitmag-devel01-data/cache/avisbits/perm/avis/");
         properties.setProperty(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.HADOOP_USER, "newspapr");
-
-        //properties.setProperty(ConfigConstants.JPYLYZER_PATH,"/usr/lib/python2.7/site-packages/jpylyzer/jpylyzer.py");
-        properties.setProperty(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH,"echo");
+        properties.setProperty(ConfigConstants.JPYLYZER_PATH,"/usr/lib/python2.7/site-packages/jpylyzer/jpylyzer.py");
 
 
-        JpylyzerRunnableComponent component = new JpylyzerRunnableComponent(properties){
-            @Override
-            public InputStream retrieveBatchStructure(Batch batch) throws IOException {
-                return Thread.currentThread().getContextClassLoader().getResourceAsStream("assumed-valid-structure.xml");
-            }
-        };
+        JpylyzerRunnableComponent component = new JpylyzerRunnableComponent(properties);
         ResultCollector resultCollector = new ResultCollector("crap", "crap");
 
         component.doWorkOnBatch(batch, resultCollector);

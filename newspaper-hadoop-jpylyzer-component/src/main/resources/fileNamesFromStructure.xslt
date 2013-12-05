@@ -6,7 +6,7 @@
 
     <xsl:output omit-xml-declaration="yes" indent="yes"/>
     <xsl:strip-space elements="*"/>
-    <xsl:param name="prefix"/>
+    <xsl:param name="file.storage.path"/>
 
     <!--<xsl:template match="node()|@*" name="identity">
         <xsl:copy>
@@ -16,7 +16,7 @@
 -->
 
     <xsl:template match="//node[substring(@shortName, string-length(@shortName) - 3) = '.jp2']">
-        <xsl:value-of select="$prefix"/>
+        <xsl:value-of select="$file.storage.path"/>
         <xsl:value-of select="translate(@name,'/','_')"/>
         <xsl:text>&#xa;</xsl:text>
     </xsl:template>

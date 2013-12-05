@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.medieplatform.hadoop;
 
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
@@ -46,7 +45,7 @@ public class JpylyzerMapperTest {
 
         String testFile = getAbsolutePath(name);
         mapDriver.withInput(new LongWritable(1), new Text(testFile));
-        mapDriver.withOutput(new Text(testFile), Utils.asText(JpylyzerMapper.jpylize(new Path(testFile),jpylyzerPath.getAbsolutePath())));
+        mapDriver.withOutput(new Text(testFile), Utils.asText(JpylyzerMapper.jpylize(testFile,jpylyzerPath.getAbsolutePath())));
         mapDriver.runTest();
     }
 

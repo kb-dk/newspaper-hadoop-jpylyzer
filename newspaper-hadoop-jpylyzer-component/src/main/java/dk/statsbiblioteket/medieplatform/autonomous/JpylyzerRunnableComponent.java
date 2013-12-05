@@ -6,6 +6,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapreduce.MRConfig;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -52,12 +53,14 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
         //create the input as a file on the cluster
         Configuration conf = new Configuration();
-
+        getProperties().setProperty(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
         propertiesToConf(conf, getProperties());
 
         conf.set(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.BATCH_ID, batch.getFullID());
 
         String user = conf.get(dk.statsbiblioteket.medieplatform.hadoop.ConfigConstants.HADOOP_USER, "newspapr");
+        conf.set(MRConfig.FRAMEWORK_NAME,MRConfig.YARN_FRAMEWORK_NAME);
+
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
         //setup the dirs
@@ -81,7 +84,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
     private void propertiesToConf(Configuration conf, Properties properties) {
         for (Map.Entry<Object, Object> objectObjectEntry : properties.entrySet()) {
-            conf.setIfUnset(
+            conf.set(
                     objectObjectEntry.getKey()
                                      .toString(),
                     objectObjectEntry.getValue()

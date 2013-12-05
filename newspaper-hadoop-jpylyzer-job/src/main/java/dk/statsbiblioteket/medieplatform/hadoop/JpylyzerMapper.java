@@ -1,7 +1,6 @@
 package dk.statsbiblioteket.medieplatform.hadoop;
 
 import dk.statsbiblioteket.util.console.ProcessRunner;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -20,11 +19,14 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
 
 	@Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        String jpylyzerPath = context.getConfiguration()
+        try { String jpylyzerPath = context.getConfiguration()
                                      .get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH);
-        InputStream jpylize = jpylize(new Path(value.toString()), jpylyzerPath);
+        InputStream jpylize = jpylize(value.toString(), jpylyzerPath);
         Text text = Utils.asText(jpylize);
         context.write(value, text);
+        } catch (Exception e){
+            throw new IOException(e);
+        }
     }
 
 
@@ -39,10 +41,8 @@ public class JpylyzerMapper extends Mapper<LongWritable,Text,Text,Text>  {
      * @throws IOException if the execution of jpylyzer failed in some fashion (not invalid file, if the program
      *                     returned non-zero returncode)
      */
-    protected static InputStream jpylize(Path dataPath, String jpylyzerPath) throws IOException {
-        System.out
-              .println("jpylyzing '"+dataPath+"' with '"+jpylyzerPath+"'");
-        ProcessRunner runner = new ProcessRunner(jpylyzerPath, dataPath.toString());
+    protected static InputStream jpylize(String dataPath, String jpylyzerPath) throws IOException {
+        ProcessRunner runner = new ProcessRunner(jpylyzerPath, dataPath);
         Map<String, String> myEnv = new HashMap<String,String>(System.getenv());
         runner.setEnviroment(myEnv);
         runner.setOutputCollectionByteSize(Integer.MAX_VALUE);

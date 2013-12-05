@@ -30,14 +30,9 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
-        System.out
-              .println("Setup called for reducer");
         fedora = createFedoraClient(context);
         batchID = context.getConfiguration()
                          .get(ConfigConstants.BATCH_ID);
-        System.out
-              .println("batchID read as " + batchID);
-
     }
 
     /**
@@ -55,12 +50,6 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
             String username = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_USERNAME);
             String password = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_PASSWORD);
             String domsUrl = conf.get(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.DOMS_URL);
-            System.out
-                  .println(username);
-            System.out
-                  .println(password);
-            System.out
-                  .println(domsUrl);
             return new EnhancedFedoraImpl(
                     new Credentials(username, password), domsUrl, null, null);
         } catch (JAXBException e) {
@@ -83,8 +72,6 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         String pid = getDomsPid(key);
-        System.out
-              .println(pid);
         String translate = translate(key.toString());
         boolean first = false;
         for (Text value : values) {
@@ -130,6 +117,7 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
                 throw new RuntimeException("Failed to look up doms object for DC identifier '" + path + "'");
             } else {
                 if (hits.size() > 1) {
+                    //TODO log this?
                     System.err
                           .println("Found multipe pids for dc identifier '"+path+"'");
                 }
