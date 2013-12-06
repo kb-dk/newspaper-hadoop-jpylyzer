@@ -63,14 +63,14 @@ public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
     }
 
     /**
-     * Reducde (save result in doms)
+     * Reduce (save result in doms)
      *
-     * @param key
-     * @param values
-     * @param context
+     * @param key the filename
+     * @param values the jpylyzer xml
+     * @param context the task context
      *
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException Any checked exception that is not an InterruptedException
+     * @throws InterruptedException from Hadoop
      */
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {

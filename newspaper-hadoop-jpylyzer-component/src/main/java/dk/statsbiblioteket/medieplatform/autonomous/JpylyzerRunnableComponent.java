@@ -41,10 +41,12 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         super(properties);
     }
 
+    /**
+     * This is the event ID that correspond to the work done by this component. It will be added to the list of
+     * events a batch have experienced when the work is completed (along with information about success or failure
+     */
     @Override
     public String getEventID() {
-        //This is the event ID that correspond to the work done by this component. It will be added to the list of
-        //events a batch have experienced when the work is completed (along with information about success or failure)
         return "JPylyzed";
     }
 
@@ -53,13 +55,13 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
         //create the input as a file on the cluster
         Configuration conf = new Configuration();
-        getProperties().setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM,"False");
+        getProperties().setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM, "False");
         propertiesToConf(conf, getProperties());
 
         conf.set(ConfigConstants.BATCH_ID, batch.getFullID());
 
         String user = conf.get(ConfigConstants.HADOOP_USER, "newspapr");
-        conf.set(MRConfig.FRAMEWORK_NAME,MRConfig.YARN_FRAMEWORK_NAME);
+        conf.set(MRConfig.FRAMEWORK_NAME, MRConfig.YARN_FRAMEWORK_NAME);
 
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
@@ -68,8 +70,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         //setup the dirs
         String jobFolder = getProperties().getProperty(ConfigConstants.JOB_FOLDER);
         Path inputFile = new Path(
-                jobFolder,
-                "input_" + batch.getFullID() + "_"+time+"_files.txt");
+                jobFolder, "input_" + batch.getFullID() + "_" + time + "_files.txt");
 
         //make file list stream from batch structure
         FSDataOutputStream fileoutStream = fs.create(
@@ -78,10 +79,8 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         fileoutStream.close();
 
 
-
         Path outDir = new Path(
-                jobFolder,
-                "output_" + batch.getFullID()+"_"+ time);
+                jobFolder, "output_" + batch.getFullID() + "_" + time);
 
 
         runJob(batch, resultCollector, conf, inputFile, outDir, user);
@@ -92,10 +91,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
     private void propertiesToConf(Configuration conf, Properties properties) {
         for (Map.Entry<Object, Object> objectObjectEntry : properties.entrySet()) {
             conf.set(
-                    objectObjectEntry.getKey()
-                                     .toString(),
-                    objectObjectEntry.getValue()
-                                     .toString());
+                    objectObjectEntry.getKey().toString(), objectObjectEntry.getValue().toString());
         }
     }
 
@@ -138,12 +134,12 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         InputStream structure = retrieveBatchStructure(batch);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(
-                ConfigConstants.PREFIX,
-                getProperties().getProperty(ConfigConstants.PREFIX));
+                ConfigConstants.PREFIX, getProperties().getProperty(ConfigConstants.PREFIX));
         XSLT.transform(
-                Thread.currentThread()
-                      .getContextClassLoader()
-                      .getResource("fileNamesFromStructure.xslt"), structure, outputStream, params);
+                Thread.currentThread().getContextClassLoader().getResource("fileNamesFromStructure.xslt"),
+                structure,
+                outputStream,
+                params);
 
     }
 }

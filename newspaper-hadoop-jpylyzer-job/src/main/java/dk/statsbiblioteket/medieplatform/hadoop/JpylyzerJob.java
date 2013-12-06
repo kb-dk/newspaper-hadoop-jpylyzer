@@ -23,8 +23,6 @@ import java.io.IOException;
 public class JpylyzerJob implements Tool {
 
     private static Logger log = Logger.getLogger(JpylyzerJob.class);
-
-
     private Configuration conf;
 
     public static void main(String[] args) throws Exception {
@@ -45,24 +43,14 @@ public class JpylyzerJob implements Tool {
      */
     @Override
     public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-
-
         Configuration configuration = getConf();
-        configuration.setIfUnset(
-                ConfigConstants.JPYLYZER_PATH,
-                "jpylyzer.py");
-        configuration.setIfUnset(
-                ConfigConstants.DOMS_URL,
-                "http://achernar:7880/fedora");
-        configuration.setIfUnset(
-                ConfigConstants.DOMS_USERNAME,
-                "fedoraAdmin");
-        configuration.setIfUnset(
-                ConfigConstants.DOMS_PASSWORD,
-                "fedoraAdminPass");
+        configuration.setIfUnset(ConfigConstants.JPYLYZER_PATH, "jpylyzer.py");
+        configuration.setIfUnset(ConfigConstants.DOMS_URL, "http://achernar:7880/fedora");
+        configuration.setIfUnset(ConfigConstants.DOMS_USERNAME, "fedoraAdmin");
+        configuration.setIfUnset(ConfigConstants.DOMS_PASSWORD, "fedoraAdminPass");
 
         Job job = Job.getInstance(configuration);
-        job.setJobName("Newspaper "+getClass().getSimpleName()+" "+configuration.get(ConfigConstants.BATCH_ID));
+        job.setJobName("Newspaper " + getClass().getSimpleName() + " " + configuration.get(ConfigConstants.BATCH_ID));
 
         job.setJarByClass(JpylyzerJob.class);
         job.setMapperClass(JpylyzerMapper.class);
@@ -75,9 +63,8 @@ public class JpylyzerJob implements Tool {
         job.setMapOutputValueClass(Text.class);
 
         job.setInputFormatClass(NLineInputFormat.class);
-        int filesPerMapTask = configuration.getInt(ConfigConstants.FILES_PER_MAP_TASK,1);
-        NLineInputFormat.setNumLinesPerSplit(job,filesPerMapTask);
-
+        int filesPerMapTask = configuration.getInt(ConfigConstants.FILES_PER_MAP_TASK, 1);
+        NLineInputFormat.setNumLinesPerSplit(job, filesPerMapTask);
 
         job.setOutputFormatClass(TextOutputFormat.class);
 
@@ -85,8 +72,7 @@ public class JpylyzerJob implements Tool {
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean result = job.waitForCompletion(true);
-        System.out
-              .println(job.toString());
+        log.info(job);
         return result ? 0 : 1;
     }
 
