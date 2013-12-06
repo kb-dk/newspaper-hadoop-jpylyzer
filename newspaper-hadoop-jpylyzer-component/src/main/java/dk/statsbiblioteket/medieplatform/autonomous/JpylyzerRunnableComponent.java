@@ -64,18 +64,22 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         FileSystem fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf, user);
 
         //setup the dirs
+        String jobFolder = getProperties().getProperty(ConfigConstants.JOB_FOLDER);
         Path inputFile = new Path(
-                getProperties().getProperty(ConfigConstants.JOB_FOLDER),
+                jobFolder,
                 "input_" + batch.getFullID() + "_files.txt");
-        Path outDir = new Path(
-                getProperties().getProperty(ConfigConstants.JOB_FOLDER),
-                "output_" + batch.getFullID());
 
         //make file list stream from batch structure
         FSDataOutputStream fileoutStream = fs.create(
                 inputFile);
         getFileList(batch, fileoutStream);
         fileoutStream.close();
+
+
+        Path outDir = new Path(
+                jobFolder,
+                "output_" + batch.getFullID()+"_"+System.currentTimeMillis());
+
 
         runJob(batch, resultCollector, conf, inputFile, outDir, user);
 
