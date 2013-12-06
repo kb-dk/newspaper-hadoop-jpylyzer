@@ -62,6 +62,7 @@ public class JpylyzerJob implements Tool {
                 "fedoraAdminPass");
 
         Job job = Job.getInstance(configuration);
+        job.setJobName(getClass().getName()+" "+configuration.get(ConfigConstants.BATCH_ID));
 
         job.setJarByClass(JpylyzerJob.class);
         job.setMapperClass(JpylyzerMapper.class);
