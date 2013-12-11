@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class JpylyzerMapper extends Mapper<LongWritable, Text, Text, Text> {
 
-    private static Logger log = Logger.getLogger(JpylyzerJob.class);
+    private static Logger log = Logger.getLogger(JpylyzerMapper.class);
 
     /**
      * run jpylyzer on the given file and return the xml report as an inputstream.

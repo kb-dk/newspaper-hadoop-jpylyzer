@@ -26,7 +26,7 @@ import java.util.List;
 public class DomsSaverReducer extends Reducer<Text, Text, Text, Text> {
 
 
-    private static Logger log = Logger.getLogger(JpylyzerJob.class);
+    private static Logger log = Logger.getLogger(DomsSaverReducer.class);
     private EnhancedFedora fedora;
     private String batchID = null;
 
