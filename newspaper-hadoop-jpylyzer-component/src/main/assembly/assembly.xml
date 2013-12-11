@@ -58,5 +58,22 @@
             </directoryMode>
         </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>CHANGELOG</source>
+            <destName>CHANGELOG</destName>
+            <fileMode>
+                664
+            </fileMode>
+        </file>
+        <file>
+            <source>Readme</source>
+            <destName>Readme</destName>
+            <fileMode>
+                664
+            </fileMode>
+        </file>
+
+    </files>
 
 </assembly>
