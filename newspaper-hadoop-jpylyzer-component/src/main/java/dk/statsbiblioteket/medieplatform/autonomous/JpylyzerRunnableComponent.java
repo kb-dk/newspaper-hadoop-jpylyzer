@@ -56,7 +56,7 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
         //create the input as a file on the cluster
         Configuration conf = new Configuration();
         getProperties().setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM, "False");
-        propertiesToConf(conf, getProperties());
+        propertiesToHadoopConfiguration(conf, getProperties());
 
         conf.set(ConfigConstants.BATCH_ID, batch.getFullID());
 
@@ -88,10 +88,9 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
 
     }
 
-    private void propertiesToConf(Configuration conf, Properties properties) {
+    private void propertiesToHadoopConfiguration(Configuration conf, Properties properties) {
         for (Map.Entry<Object, Object> objectObjectEntry : properties.entrySet()) {
-            conf.set(
-                    objectObjectEntry.getKey().toString(), objectObjectEntry.getValue().toString());
+            conf.set(objectObjectEntry.getKey().toString(), objectObjectEntry.getValue().toString());
         }
     }
 
