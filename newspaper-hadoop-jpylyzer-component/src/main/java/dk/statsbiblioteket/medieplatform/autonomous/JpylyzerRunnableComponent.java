@@ -131,7 +131,15 @@ public class JpylyzerRunnableComponent extends AbstractRunnableComponent {
     }
 
     private void getFileList(Batch batch, OutputStream outputStream) throws IOException, TransformerException {
-        InputStream structure = retrieveBatchStructure(batch);
+        InputStream structure;
+        try {
+            structure = retrieveBatchStructure(batch);
+        } catch (NullPointerException e) {
+            throw new IOException("The batch '" + batch.getFullID() + "' was not found in doms");
+        }
+        if (structure == null) {
+            throw new IOException("The structure for the batch '" + batch.getFullID() + "'is not available");
+        }
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(
                 ConfigConstants.PREFIX, getProperties().getProperty(ConfigConstants.PREFIX));
