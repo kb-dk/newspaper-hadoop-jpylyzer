@@ -21,6 +21,10 @@
     </repositories>
     <packaging>pom</packaging>
 
+    <scm>
+        <connection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</connection>
+        <developerConnection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</developerConnection>
+    </scm>
     <modules>
         <module>newspaper-hadoop-jpylyzer-job</module>
         <module>newspaper-hadoop-jpylyzer-component</module>
