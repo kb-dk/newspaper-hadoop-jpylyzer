@@ -9,7 +9,7 @@
         <target>System.err</target>
     </appender>
 
-    <root level="warn">
+    <root level="INFO">
         <appender-ref ref="STDERR"/>
     </root>
 </configuration>
