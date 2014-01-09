@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
 
@@ -22,8 +24,8 @@
     <scm>
         <connection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <modules>
         <module>newspaper-hadoop-jpylyzer-job</module>
         <module>newspaper-hadoop-jpylyzer-component</module>
@@ -64,9 +66,9 @@
             </dependency>
 
             <dependency>
-            	<groupId>commons-httpclient</groupId>
-            	<artifactId>commons-httpclient</artifactId>
-            	<version>3.1</version>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
             </dependency>
 
             <dependency>
@@ -95,10 +97,21 @@
                 <artifactId>autonomous-component</artifactId>
                 <version>1.4-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.newspaper</groupId>
+                <artifactId>hadoop-component</artifactId>
+                <version>1.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.newspaper</groupId>
+                <artifactId>hadoop-doms-integration</artifactId>
+                <version>1.4-SNAPSHOT</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
-               <artifactId>batch-event-framework-common</artifactId>
+                <artifactId>batch-event-framework-common</artifactId>
                 <version>1.4-SNAPSHOT</version>
             </dependency>
 
@@ -123,8 +136,6 @@
                 <artifactId>jcl-over-slf4j</artifactId>
                 <version>1.7.5</version>
             </dependency>
-
-
 
 
         </dependencies>
