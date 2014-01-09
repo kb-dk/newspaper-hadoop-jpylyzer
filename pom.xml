@@ -93,24 +93,24 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>autonomous-component</artifactId>
-                <version>1.4</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>hadoop-component</artifactId>
-                <version>1.4</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>hadoop-doms-integration</artifactId>
-                <version>1.4</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
 
 
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>batch-event-framework-common</artifactId>
-                <version>1.4</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
 
             <dependency>
