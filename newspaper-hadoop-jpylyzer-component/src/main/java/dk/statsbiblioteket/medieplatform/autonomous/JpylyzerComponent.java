@@ -30,7 +30,7 @@ public class JpylyzerComponent {
         RunnableComponent component = new JpylyzerRunnableComponent(properties);
 
         CallResult result = AutonomousComponentUtils.startAutonomousComponent(properties, component);
-        System.out.print(result);
+        log.info(result.toString());
         System.exit(result.containsFailures());
     }
 }
