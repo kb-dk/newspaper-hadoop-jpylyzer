@@ -60,15 +60,15 @@
     </fileSets>
     <files>
         <file>
-            <source>CHANGELOG</source>
-            <destName>CHANGELOG</destName>
+            <source>../CHANGELOG.md</source>
+            <destName>CHANGELOG.md</destName>
             <fileMode>
                 664
             </fileMode>
         </file>
         <file>
-            <source>Readme</source>
-            <destName>Readme</destName>
+            <source>../README.md</source>
+            <destName>README.md</destName>
             <fileMode>
                 664
             </fileMode>
