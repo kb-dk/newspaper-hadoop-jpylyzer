@@ -1,3 +1,5 @@
+1.2.3
+* Updated to newspaper-parent 1.1
 1.2.2
 *Updated framework dependency to 1.4.5 to enable maxResults
 
