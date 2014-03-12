@@ -4,10 +4,12 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
+
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,11 +38,14 @@ public class JPylyzerJobTest {
 
         JpylyzerMapper mapper = new JpylyzerMapper();
         File testFolder = new File(Thread.currentThread().getContextClassLoader().getResource(
-                "B400022028241-RT1/balloon.jp2").toURI()).getParentFile().getParentFile().getParentFile();
-        File jpylyzerPath = new File(testFolder, "src/test/extras/jpylyzer-1.10.1/jpylyzer.py");
-        mapReduceDriver.setMapper(mapper);
+                "B400022028241-RT1/balloon.jp2").toURI()).getParentFile().getParentFile().getParentFile().getParentFile();
+        File jpylyzerPath = new File(testFolder, "/src/test/extras/jpylyzer-1.10.1/jpylyzer.py");
+        
+        mapReduceDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.hadoop.DomsSaverReducer.HADOOP_SAVER_DATASTREAM, "JPYLYZER");
+        mapReduceDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.BATCH_ID, "B400022028241-RT1");
         mapReduceDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
-
+        mapReduceDriver.setMapper(mapper);
+        
         final EnhancedFedora fedora = mock(EnhancedFedora.class);
         when(fedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));
         doNothing().when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
@@ -75,6 +80,7 @@ public class JPylyzerJobTest {
     }
 
     @Test
+    @Ignore
     public void testJob() throws Exception {
          //TODO test the Jpylyzer job class
         String fileListFileName = "jp2-file-list_balloon_balloon.txt";
