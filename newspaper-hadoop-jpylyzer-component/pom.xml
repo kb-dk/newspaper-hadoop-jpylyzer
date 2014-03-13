@@ -103,7 +103,7 @@
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>autonomous-component</artifactId>
+            <artifactId>sboi-doms-autonomous-component</artifactId>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>

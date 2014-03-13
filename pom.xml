@@ -19,10 +19,6 @@
     </repositories>
     <packaging>pom</packaging>
 
-    <properties>
-        <autonoumous.component.framework.version>1.6-SNAPSHOT</autonoumous.component.framework.version>
-    </properties>
-
     <scm>
         <connection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</developerConnection>
@@ -96,25 +92,25 @@
 
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
-                <artifactId>autonomous-component</artifactId>
-                <version>${autonoumous.component.framework.version}</version>
+                <artifactId>sboi-doms-autonomous-component</artifactId>
+                <version>1.6-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>hadoop-component</artifactId>
-                <version>${autonoumous.component.framework.version}</version>
+                <version>1.6-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>hadoop-doms-integration</artifactId>
-                <version>${autonoumous.component.framework.version}</version>
+                <version>1.6-SNAPSHOT</version>
             </dependency>
 
 
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>batch-event-framework-common</artifactId>
-                <version>${autonoumous.component.framework.version}</version>
+                <version>1.6-SNAPSHOT</version>
             </dependency>
 
             <dependency>

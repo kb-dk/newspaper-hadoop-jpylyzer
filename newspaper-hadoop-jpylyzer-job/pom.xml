@@ -58,10 +58,6 @@
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>batch-event-framework-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>hadoop-doms-integration</artifactId>
         </dependency>
 
