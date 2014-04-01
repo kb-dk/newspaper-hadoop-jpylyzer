@@ -82,24 +82,17 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>sboi-doms-autonomous-component</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.6</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>hadoop-component</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.6</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>hadoop-doms-integration</artifactId>
-                <version>1.7-SNAPSHOT</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>dk.statsbiblioteket.newspaper</groupId>
-                <artifactId>batch-event-framework-common</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.6</version>
             </dependency>
 
             <dependency>

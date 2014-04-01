@@ -1,3 +1,7 @@
+1.4
+* Removed explicit dependency on doms central, as this broke the batch event framework, which depends
+on a newer version
+
 1.3
 * Updated to newspaper-parent 1.2
 * Updated to version 1.6 of batch event framework
