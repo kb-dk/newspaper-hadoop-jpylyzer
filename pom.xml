@@ -10,7 +10,7 @@
     </parent>
     <artifactId>newspaper-hadoop-jpylyzer</artifactId>
     <groupId>dk.statsbiblioteket.medieplatform.hadoop</groupId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <repositories>
         <repository>
             <id>cloudera</id>
@@ -22,7 +22,7 @@
     <scm>
         <connection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/newspaper-hadoop-jpylyzer.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>newspaper-hadoop-jpylyzer-1.5</tag>
     </scm>
     <modules>
         <module>newspaper-hadoop-jpylyzer-job</module>
