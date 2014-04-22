@@ -1,3 +1,6 @@
+1.5
+* Update the hadoop client libraries to 2.0.3-alpha to include fix for known bug: https://issues.apache.org/jira/browse/MAPREDUCE-4782
+
 1.4
 * Removed explicit dependency on doms central, as this broke the batch event framework, which depends
 on a newer version
