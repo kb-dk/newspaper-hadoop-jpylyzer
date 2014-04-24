@@ -1,3 +1,6 @@
+1.6
+* Change hadoop client dependencies to Cloudera branded 2.0.0-cdh4.5.0
+
 1.5
 * Update the hadoop client libraries to 2.0.3-alpha to include fix for known bug: https://issues.apache.org/jira/browse/MAPREDUCE-4782
 
