@@ -16,11 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +40,7 @@ public class JPylyzerJobTest {
 
         JpylyzerMapper mapper = new JpylyzerMapper();
         File testFolder = new File(Thread.currentThread().getContextClassLoader().getResource(
-                "B400022028241-RT1/balloon.jp2").toURI()).getParentFile().getParentFile().getParentFile().getParentFile();
+                "B400022028241-RT1/balloon.jp2").getFile()).getParentFile().getParentFile().getParentFile().getParentFile();
         File jpylyzerPath = new File(testFolder, "/src/test/extras/jpylyzer-1.10.1/jpylyzer.py");
         
         mapReduceDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.hadoop.DomsSaverReducer.HADOOP_SAVER_DATASTREAM, "JPYLYZER");
@@ -48,7 +50,7 @@ public class JPylyzerJobTest {
         
         final EnhancedFedora fedora = mock(EnhancedFedora.class);
         when(fedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));
-        doNothing().when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
+        doReturn(new Date()).when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
 
         mapReduceDriver.setReducer(new DomsSaverReducer() {
             @Override
