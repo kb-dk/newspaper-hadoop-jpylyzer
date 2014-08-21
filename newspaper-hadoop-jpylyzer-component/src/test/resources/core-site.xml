@@ -6,7 +6,7 @@
     <name>fs.defaultFS</name>
     <value>hdfs://cdh-stage-avis-master-01.statsbiblioteket.dk:8020</value>
   </property>
-  <property>
+ <!-- <property>
     <name>fs.trash.interval</name>
     <value>1</value>
   </property>
@@ -25,5 +25,5 @@
   <property>
     <name>hadoop.security.auth_to_local</name>
     <value>DEFAULT</value>
-  </property>
+  </property>-->
 </configuration>

@@ -50,7 +50,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.sbutil</groupId>
                 <artifactId>sbutil-common</artifactId>
-                <version>0.5.14</version>
+                <version>0.5.17</version>
             </dependency>
 
             <dependency>
