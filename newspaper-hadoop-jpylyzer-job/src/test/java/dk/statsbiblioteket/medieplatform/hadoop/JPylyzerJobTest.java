@@ -4,7 +4,6 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
-
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
@@ -21,7 +20,6 @@ import java.util.Date;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,14 +46,14 @@ public class JPylyzerJobTest {
         mapReduceDriver.getConfiguration().set(dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants.JPYLYZER_PATH, jpylyzerPath.getAbsolutePath());
         mapReduceDriver.setMapper(mapper);
         
-        final EnhancedFedora fedora = mock(EnhancedFedora.class);
-        when(fedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));
-        doReturn(new Date()).when(fedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
+        final EnhancedFedora mockFedora = mock(EnhancedFedora.class);
+        when(mockFedora.findObjectFromDCIdentifier(anyString())).thenReturn(Arrays.asList(testPid));
+        doReturn(new Date()).when(mockFedora).modifyDatastreamByValue(eq(testPid), eq("JPYLYZER"), anyString(), anyList(), anyString());
 
         mapReduceDriver.setReducer(new DomsSaverReducer() {
             @Override
             protected EnhancedFedora createFedoraClient(Context context) throws IOException {
-                return fedora;
+                return mockFedora;
             }
         });
     }
