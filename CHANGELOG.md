@@ -1,3 +1,6 @@
+1.7
+* Update to batch event framework 1.10
+
 1.6
 * Change hadoop client dependencies to Cloudera branded 2.0.0-cdh4.5.0
 
