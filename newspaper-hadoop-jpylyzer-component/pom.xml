@@ -98,12 +98,12 @@
         <dependency>
             <groupId>dk.statsbiblioteket.medieplatform.hadoop</groupId>
             <artifactId>newspaper-hadoop-jpylyzer-job</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>${project.version}</version>
             <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>sboi-doms-autonomous-component</artifactId>
+            <artifactId>newspaper-batch-event-framework-common</artifactId>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
