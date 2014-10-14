@@ -101,10 +101,7 @@
             <version>${project.version}</version>
             <classifier>jar-with-dependencies</classifier>
         </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>newspaper-batch-event-framework-common</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>hadoop-component</artifactId>
