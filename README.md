@@ -19,7 +19,6 @@ iterator.useFileSystem=false
 autonomous.lockserver.url=<zookeeperServer>
 autonomous.sboi.url=<summaWsdl>
 autonomous.pastSuccessfulEvents=Data_Archived
-autonomous.pastFailedEvents=
 autonomous.futureEvents=JPylyzed
 autonomous.maxThreads=1
 autonomous.maxRuntimeForWorkers=360000000
