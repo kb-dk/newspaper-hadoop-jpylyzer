@@ -16,23 +16,23 @@
   </property>
   <property>
     <name>yarn.resourcemanager.address</name>
-    <value>cdh-stage-avis-master-01.statsbiblioteket.dk:8032</value>
+    <value>{hadoop.master.host}:{hadoop.master.resourcemanagerport}</value>
   </property>
   <property>
     <name>yarn.resourcemanager.admin.address</name>
-    <value>cdh-stage-avis-master-01.statsbiblioteket.dk:8033</value>
+    <value>{hadoop.master.host}:{hadoop.master.resourcemanageradminport}</value>
   </property>
   <property>
     <name>yarn.resourcemanager.scheduler.address</name>
-    <value>cdh-stage-avis-master-01.statsbiblioteket.dk:8030</value>
+    <value>{hadoop.master.host}:{hadoop.master.resourcemanagerschedulerport}</value>
   </property>
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>
-    <value>cdh-stage-avis-master-01.statsbiblioteket.dk:8031</value>
+    <value>{hadoop.master.host}:{hadoop.master.resourcemanagertrackerport}</value>
   </property>
   <property>
     <name>yarn.resourcemanager.webapp.address</name>
-    <value>cdh-stage-avis-master-01.statsbiblioteket.dk:8088</value>
+    <value>{hadoop.master.host}:{hadoop.master.resourcemanagerwebappport}</value>
   </property>
   <property>
     <name>yarn.resourcemanager.client.thread-count</name>
