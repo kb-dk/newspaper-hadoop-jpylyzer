@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://{hadoop.master.host}:{hadoop.master.port}</value>
+    <value>hdfs://{hadoop.master.host}:{hadoop.master.hdfsport}</value>
   </property>
   <property>
     <name>fs.trash.interval</name>
