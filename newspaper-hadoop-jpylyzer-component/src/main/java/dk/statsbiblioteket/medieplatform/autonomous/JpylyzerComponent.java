@@ -27,9 +27,9 @@ public class JpylyzerComponent {
         Properties properties = NewspaperBatchAutonomousComponentUtils.parseArgs(args);
 
         //make a new runnable component from the properties
-        RunnableComponent component = new JpylyzerRunnableComponent(properties);
+        RunnableComponent<Batch> component = new JpylyzerRunnableComponent(properties);
 
-        CallResult result = NewspaperBatchAutonomousComponentUtils.startAutonomousComponent(properties, component);
+        CallResult<Batch> result = NewspaperBatchAutonomousComponentUtils.startAutonomousComponent(properties, component);
         log.info(result.toString());
         System.exit(result.containsFailures());
     }
