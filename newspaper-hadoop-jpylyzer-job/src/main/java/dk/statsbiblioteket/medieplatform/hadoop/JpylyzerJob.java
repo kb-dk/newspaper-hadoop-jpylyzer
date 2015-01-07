@@ -74,11 +74,7 @@ public class JpylyzerJob implements Tool {
 
         boolean result = job.waitForCompletion(true);
         log.info(job);
-        if (!result) {
-            throw new RuntimeException(job.getStatus().getFailureInfo());
-        } else {
-            return 0;
-        }
+        return result ? 0 : 1;
     }
 
     @Override

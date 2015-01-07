@@ -19,9 +19,6 @@
             <includes>
                 <include>*:*</include>
             </includes>
-            <excludes>
-                <exclude>dk.statsbiblioteket.medieplatform.hadoop:newspaper-hadoop-jpylyzer-job</exclude>
-            </excludes>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>
