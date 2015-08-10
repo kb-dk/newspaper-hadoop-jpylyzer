@@ -20,7 +20,7 @@
                         <integration.test.newspaper.testdata>${integration.test.newspaper.testdata}
                         </integration.test.newspaper.testdata>
                     </systemPropertyVariables>
-                    <forkMode>never</forkMode>
+                    <forkCount>1</forkCount>
                 </configuration>
             </plugin>
 
